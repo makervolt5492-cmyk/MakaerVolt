@@ -251,7 +251,10 @@ footer p{color:var(--muted);font-size:.82rem;}
     <li><a href="#services">Servicii</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <button id="cart-btn" onclick="openCart()">🛒 Coș <span id="cart-count">0</span></button>
+  <div style="display:flex;gap:.5rem;align-items:center;">
+    <button id="dev-btn" onclick="showDevDialog()" title="Schimbă tipul dispozitivului" style="background:var(--bg3);border:1px solid var(--border2);color:var(--muted);width:36px;height:36px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">📱</button>
+    <button id="cart-btn" onclick="openCart()">🛒 Coș <span id="cart-count">0</span></button>
+  </div>
 </nav>
 
 <section id="hero">
@@ -315,7 +318,7 @@ footer p{color:var(--muted);font-size:.82rem;}
           <p>Servicii IT & Reparații Electronice · Suceava</p>
         </div>
       </div>
-      <a class="cta-email" href="mailto:makervolt.5492@gmail.com">✉️ Trimite Email</a>
+      <a class="cta-email" href="https://mail.google.com/mail/?view=cm&to=makervolt.5492%40gmail.com&su=Contact%20Maker%20Volt" target="_blank" rel="noopener">✉️ Trimite Email</a>
       <a class="cta-call" href="https://1764.3cx.cloud/makervolt" target="_blank" rel="noopener">📞 Sună / Chat 3CX</a>
     </div>
     <div>
@@ -446,41 +449,60 @@ function buildCartEmail(){
   body+=`\nTOTAL: ${total} RON\n\nVă rog să mă contactați pentru confirmare.\n\nMulțumesc!`;
   return body;
 }
+function gmailOpen(subject, body){
+  const base='https://mail.google.com/mail/?view=cm&to=makervolt.5492%40gmail.com';
+  const url=base+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  window.open(url,'_blank','noopener');
+}
 function sendOrderEmail(){
   const entries=Object.entries(cart).filter(([,q])=>q>0);
   if(!entries.length)return;
-  window.location.href=`mailto:makervolt.5492@gmail.com?subject=${encodeURIComponent('Comandă Servicii – Maker Volt')}&body=${encodeURIComponent(buildCartEmail())}`;
+  gmailOpen('Comandă Servicii – Maker Volt', buildCartEmail());
 }
 function sendContact(){
   const name=document.getElementById('cname').value.trim();
   const msg=document.getElementById('cmsg').value.trim();
   if(!msg){showToast('⚠️ Completează mesajul!');return;}
-  window.location.href=`mailto:makervolt.5492@gmail.com?subject=${encodeURIComponent(`Întrebare de la ${name||'client'} – Maker Volt`)}&body=${encodeURIComponent(`Nume: ${name||'necunoscut'}\n\nMesaj:\n${msg}`)}`;
+  gmailOpen(`Întrebare de la ${name||'client'} – Maker Volt`,`Nume: ${name||'necunoscut'}\n\nMesaj:\n${msg}`);
 }
 let toastTimer;
 function showToast(m){clearTimeout(toastTimer);const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),2800);}
 document.getElementById('cart-modal').addEventListener('click',function(e){if(e.target===this)closeCart();});
 renderServices();
 
+function showDevDialog(){
+  document.getElementById('dev-dialog').style.display='flex';
+}
 function chooseDevice(type){
   document.getElementById('dev-dialog').style.display='none';
   localStorage.setItem('mv_device',type);
+  const btn=document.getElementById('dev-btn');
+  if(btn) btn.textContent=type==='mobile'?'📱':'🖥️';
   if(type==='mobile'){
-    // Add mobile-friendly overrides
-    document.documentElement.style.setProperty('--mob','1');
     document.querySelectorAll('.services-grid').forEach(g=>g.style.gridTemplateColumns='1fr');
     document.querySelectorAll('nav ul').forEach(u=>u.style.display='none');
+  } else {
+    document.querySelectorAll('.services-grid').forEach(g=>g.style.gridTemplateColumns='');
+    document.querySelectorAll('nav ul').forEach(u=>u.style.display='');
   }
 }
 // Auto-detect on load
 (function(){
   const saved=localStorage.getItem('mv_device');
-  if(saved){document.getElementById('dev-dialog').style.display='none';return;}
+  const btn=document.getElementById('dev-btn');
+  if(saved){
+    document.getElementById('dev-dialog').style.display='none';
+    if(btn) btn.textContent=saved==='mobile'?'📱':'🖥️';
+    if(saved==='mobile'){
+      document.querySelectorAll('.services-grid').forEach(g=>g.style.gridTemplateColumns='1fr');
+      document.querySelectorAll('nav ul').forEach(u=>u.style.display='none');
+    }
+    return;
+  }
   // Smart auto-detect suggestion
   const isMob=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   const hint=document.querySelector('.dev-note');
   if(hint) hint.textContent=(isMob?'Pare că ești pe telefon/tabletă':'Pare că ești pe desktop')+ ' – confirmă mai jos';
-  // Highlight recommended button
   if(isMob) document.querySelector('.dev-mobile').style.outline='2px solid var(--accent)';
   else document.querySelector('.dev-desktop').style.outline='2px solid var(--accent)';
 })();
