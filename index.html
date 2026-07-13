@@ -216,13 +216,67 @@ footer p{color:var(--muted);font-size:.82rem;}
   color:var(--text);padding:.7rem 1.2rem;border-radius:8px;font-size:.88rem;font-weight:600;z-index:999;
   transform:translateY(120%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
 #toast.show{transform:translateY(0);}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* CALL MENU */
+.call-menu-overlay{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:1rem;}
+.call-menu-overlay.open{display:flex;}
+.call-menu-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:420px;overflow:hidden;animation:fadeUp .25s ease;}
+.call-menu-header{padding:1.2rem 1.4rem .8rem;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;}
+.call-menu-header h3{font-family:var(--fd);font-size:1.4rem;letter-spacing:2px;color:var(--text);}
+.call-menu-close{background:var(--bg3);border:1px solid var(--border2);color:var(--text);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;}
+.call-menu-close:hover{background:var(--red);}
+.call-option{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border2);cursor:pointer;}
+.call-option:last-child{border-bottom:none;}
+.call-option-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.3rem;}
+.call-option-icon{font-size:1.4rem;}
+.call-option-title{font-weight:700;font-size:1rem;display:flex;align-items:center;gap:.5rem;}
+.badge-rec{background:var(--accent);color:#000;font-size:.6rem;font-weight:800;padding:.1rem .4rem;border-radius:3px;letter-spacing:.5px;text-transform:uppercase;}
+.call-option-desc{color:var(--muted);font-size:.83rem;line-height:1.5;padding-left:2rem;}
+/* 3CX expanded panel */
+.cx-panel{display:none;padding:.9rem 1.4rem 1.2rem;background:rgba(0,212,255,.04);border-top:1px solid var(--border2);}
+.cx-panel.open{display:block;}
+.cx-warning{background:rgba(240,198,48,.08);border:1px solid rgba(240,198,48,.2);border-radius:7px;padding:.7rem .9rem;font-size:.8rem;color:var(--text);line-height:1.55;margin-bottom:.8rem;}
+.cx-warning strong{color:var(--amber);}
+.btn-call-now{display:flex;align-items:center;justify-content:center;gap:.5rem;background:var(--accent);color:#000;border:none;padding:.8rem 1.5rem;border-radius:7px;font-family:var(--fb);font-weight:800;font-size:1rem;letter-spacing:.5px;cursor:pointer;width:100%;text-decoration:none;transition:transform .15s,box-shadow .15s;}
+.btn-call-now:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,212,255,.4);}
+/* Instagram panel */
+.ig-panel{display:none;padding:.9rem 1.4rem 1.2rem;background:rgba(131,58,180,.05);border-top:1px solid var(--border2);}
+.ig-panel.open{display:block;}
+.ig-desc{font-size:.83rem;color:var(--muted);line-height:1.6;margin-bottom:.8rem;}
+.ig-desc strong{color:var(--text);}
+.btn-ig{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem 1.2rem;border-radius:7px;font-family:var(--fb);font-weight:700;font-size:.9rem;cursor:pointer;text-decoration:none;transition:all .15s;margin-bottom:.5rem;border:none;}
+.btn-ig-open{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;}
+.btn-ig-open:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(220,39,67,.35);}
+.btn-ig-follow{background:var(--bg3);border:1px solid var(--border2);color:var(--text);}
+.btn-ig-follow:hover{border-color:#cc2366;color:#cc2366;}
+
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
 </style>
 </head>
 <body>
+
+<!-- CALL MENU -->
+<div class="call-menu-overlay" id="call-menu">
+  <div class="call-menu-box">
+    <div class="call-menu-header">
+      <h3>📞 CONTACTEAZĂ-NE</h3>
+      <button class="call-menu-close" onclick="closeCallMenu()">✕</button>
+    </div>
+    <div style="padding:1.2rem 1.4rem;">
+      <div class="ig-desc">
+        Ne puteți <strong>suna sau trimite un mesaj</strong> direct pe Instagram.<br/>
+        Vă rugăm, dacă puteți, <strong>dați-ne și un follow</strong> — ne ajutați enorm! 🙏
+      </div>
+      <a class="btn-ig btn-ig-open" href="https://www.instagram.com/makervolt.reparatie/" target="_blank" rel="noopener" onclick="closeCallMenu()">
+        📸 Deschide Instagram
+      </a>
+      <a class="btn-ig btn-ig-follow" href="https://www.instagram.com/makervolt.reparatie/" target="_blank" rel="noopener" onclick="closeCallMenu()">
+        ❤️ Follow @makervolt.reparatie
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- DEVICE DETECTION DIALOG -->
 <div id="dev-dialog">
@@ -265,7 +319,7 @@ footer p{color:var(--muted);font-size:.82rem;}
   <p class="slogan">„Dăm viață din nou <em>calculatoarelor uitate</em>"</p>
   <div class="hero-ctas">
     <a class="btn-primary" href="#services">Vezi Serviciile</a>
-    <a class="btn-secondary" href="https://1764.3cx.cloud/makervolt" target="_blank" rel="noopener">📞 Sună / Chat Acum</a>
+    <button class="btn-secondary" onclick="openCallMenu()">📞 Sună / Chat Acum</button>
   </div>
 </section>
 
@@ -307,8 +361,8 @@ footer p{color:var(--muted);font-size:.82rem;}
         <div class="contact-icon">📞</div>
         <div class="contact-detail">
           <h4>Telefon / Chat Online</h4>
-          <a href="https://1764.3cx.cloud/makervolt" target="_blank" rel="noopener">Apelează sau scrie pe 3CX</a>
-          <p>Disponibil Luni – Sâmbătă, 9:00 – 19:00</p>
+          <a href="#" onclick="event.preventDefault();openCallMenu()">3CX · Instagram · Apel direct</a>
+
         </div>
       </div>
       <div class="contact-item">
@@ -319,7 +373,7 @@ footer p{color:var(--muted);font-size:.82rem;}
         </div>
       </div>
       <a class="cta-email" href="#" onclick="event.preventDefault();openEmail()" rel="noopener">✉️ Trimite Email</a>
-      <a class="cta-call" href="https://1764.3cx.cloud/makervolt" target="_blank" rel="noopener">📞 Sună / Chat 3CX</a>
+      <button class="cta-call" onclick="openCallMenu()">📞 Sună / Chat</button>
     </div>
     <div>
       <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:1.8rem;">
@@ -338,7 +392,7 @@ footer p{color:var(--muted);font-size:.82rem;}
     <span style="font-family:var(--fd);letter-spacing:2px;color:var(--accent);">MAKER VOLT</span>
   </div>
   <p>© 2026 Maker Volt · Servicii IT & Reparații Electronice</p>
-  <p style="font-family:var(--fm);font-size:.72rem;color:var(--muted);">makervolt.5492@gmail.com · 3CX: 1764.3cx.cloud/makervolt</p>
+  <p style="font-family:var(--fm);font-size:.72rem;color:var(--muted);">makervolt.5492@gmail.com · instagram: @makervolt.reparatie</p>
 </footer>
 
 <div class="modal-overlay" id="cart-modal">
@@ -357,7 +411,7 @@ footer p{color:var(--muted);font-size:.82rem;}
       <p style="font-size:.88rem;color:var(--muted);margin-bottom:.2rem;">Alege cum dorești să plasezi comanda:</p>
       <button class="order-btn order-email" onclick="sendOrderEmail()">✉️ Comandă prin Email (Recomandat)</button>
       <div class="order-divider">— sau —</div>
-      <a class="order-btn order-call" href="https://1764.3cx.cloud/makervolt" target="_blank" rel="noopener">📞 Sună / Chat 3CX</a>
+      <button class="order-btn order-call" onclick="openCallMenu()">📞 Sună / Chat</button>
     </div>
   </div>
 </div>
@@ -479,6 +533,16 @@ let toastTimer;
 function showToast(m){clearTimeout(toastTimer);const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),2800);}
 document.getElementById('cart-modal').addEventListener('click',function(e){if(e.target===this)closeCart();});
 renderServices();
+
+function openCallMenu(){
+  document.getElementById('call-menu').classList.add('open');
+}
+function closeCallMenu(){
+  document.getElementById('call-menu').classList.remove('open');
+}
+document.getElementById('call-menu').addEventListener('click', function(e){
+  if(e.target===this) closeCallMenu();
+});
 
 function showDevDialog(){
   document.getElementById('dev-dialog').style.display='flex';
